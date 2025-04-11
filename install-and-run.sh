@@ -10,11 +10,11 @@ cd hyperliquid-mcp
 
 # Clone the repository
 echo "Downloading necessary files..."
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/main/index.js -o index.js
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/main/package.json -o package.json
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/main/hyperliquid_bridge.py -o hyperliquid_bridge.py
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/main/configure-mcp.js -o configure-mcp.js
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/main/dashboard.html -o dashboard.html
+curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/index.js -o index.js
+curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/package.json -o package.json
+curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/hyperliquid_bridge.py -o hyperliquid_bridge.py
+curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/configure-mcp.js -o configure-mcp.js
+curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/dashboard.html -o dashboard.html
 
 # Make scripts executable
 chmod +x index.js
