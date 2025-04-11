@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hyperliquid MCP Dashboard</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+    
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .card-header {
+      margin-bottom: 16px;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .card-description {
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .input-group {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .input-group input {
+      flex: 1;
+    }
+    
+    .help-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #1d4ed8;
+    }
+    
+    button:disabled {
+      background-color: #93c5fd;
+      cursor: not-allowed;
+    }
+    
+    .button-outline {
+      background-color: transparent;
+      color: #2563eb;
+      border: 1px solid #2563eb;
+    }
+    
+    .button-outline:hover {
+      background-color: rgba(37, 99, 235, 0.1);
+    }
+    
+    .success-alert {
+      background-color: #d1fae5;
+      border-radius: 4px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .success-alert-title {
+      color: #065f46;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+    
+    .success-alert-message {
+      color: #047857;
+      margin: 0;
+    }
+    
+    .example-command {
+      background-color: #f3f4f6;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-family: monospace;
+    }
+    
+    .spinner {
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 3px solid #2563eb;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <h1 class="card-title">Hyperliquid MCP Dashboard</h1>
+      <p class="card-description">Connect to Hyperliquid through HL Coder using the Model Context Protocol (MCP)</p>
+    </div>
+    
+    <div id="loading-section" class="hidden">
+      <div style="display: flex; justify-content: center; padding: 32px;">
+        <div class="spinner"></div>
+        <span>Checking MCP server status...</span>
+      </div>
+    </div>
+    
+    <div id="auth-section">
+      <div class="form-group">
+        <label for="secretKey">Secret Key (required)</label>
+        <div class="input-group">
+          <input type="password" id="secretKey" placeholder="Enter your Hyperliquid secret key">
+          <button class="button-outline" id="toggleSecretKey">Show</button>
+        </div>
+        <p class="help-text">Your secret key is used to authenticate with Hyperliquid and is stored locally.</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="accountAddress">Account Address (optional)</label>
+        <input type="text" id="accountAddress" placeholder="Enter your Ethereum account address">
+      </div>
+      
+      <div class="form-group">
+        <label for="network">Network</label>
+        <select id="network">
+          <option value="mainnet">Mainnet</option>
+          <option value="testnet">Testnet</option>
+        </select>
+      </div>
+      
+      <button id="connectButton">Connect to Hyperliquid</button>
+    </div>
+    
+    <div id="success-section" class="hidden">
+      <div class="success-alert">
+        <h3 class="success-alert-title">Authentication successful</h3>
+        <p class="success-alert-message">
+          The Hyperliquid MCP server is now available. You can now interact with Hyperliquid through HL Coder using natural language.
+        </p>
+      </div>
+      
+      <div>
+        <h3>Example Commands</h3>
+        <div class="example-command">Get current market prices for all coins</div>
+        <div class="example-command">Show my current positions and account value</div>
+        <div class="example-command">Place a limit buy order for 0.1 BTC at $60,000</div>
+      </div>
+      
+      <button id="disconnectButton" class="button-outline">Disconnect</button>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loadingSection = document.getElementById('loading-section');
+      const authSection = document.getElementById('auth-section');
+      const successSection = document.getElementById('success-section');
+      const secretKeyInput = document.getElementById('secretKey');
+      const accountAddressInput = document.getElementById('accountAddress');
+      const networkSelect = document.getElementById('network');
+      const toggleSecretKeyButton = document.getElementById('toggleSecretKey');
+      const connectButton = document.getElementById('connectButton');
+      const disconnectButton = document.getElementById('disconnectButton');
+      
+      // Show/hide secret key
+      toggleSecretKeyButton.addEventListener('click', function() {
+        if (secretKeyInput.type === 'password') {
+          secretKeyInput.type = 'text';
+          toggleSecretKeyButton.textContent = 'Hide';
+        } else {
+          secretKeyInput.type = 'password';
+          toggleSecretKeyButton.textContent = 'Show';
+        }
+      });
+      
+      // Check if already authenticated
+      loadingSection.classList.remove('hidden');
+      authSection.classList.add('hidden');
+      
+      fetch('/api/authenticate', { method: 'GET' })
+        .then(response => response.json())
+        .then(data => {
+          loadingSection.classList.add('hidden');
+          
+          if (data.isAuthenticated) {
+            authSection.classList.add('hidden');
+            successSection.classList.remove('hidden');
+            
+            if (data.network) {
+              networkSelect.value = data.network;
+            }
+          } else {
+            authSection.classList.remove('hidden');
+            successSection.classList.add('hidden');
+          }
+        })
+        .catch(error => {
+          console.error('Error checking authentication status:', error);
+          loadingSection.classList.add('hidden');
+          authSection.classList.remove('hidden');
+        });
+      
+      // Connect to Hyperliquid
+      connectButton.addEventListener('click', function() {
+        const secretKey = secretKeyInput.value.trim();
+        const accountAddress = accountAddressInput.value.trim();
+        const network = networkSelect.value;
+        
+        if (!secretKey) {
+          alert('Secret key is required');
+          return;
+        }
+        
+        connectButton.disabled = true;
+        connectButton.innerHTML = '<div class="spinner"></div> Authenticating...';
+        
+        fetch('/api/authenticate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            secretKey,
+            accountAddress,
+            network
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            connectButton.disabled = false;
+            connectButton.textContent = 'Connect to Hyperliquid';
+            
+            if (data.success) {
+              authSection.classList.add('hidden');
+              successSection.classList.remove('hidden');
+            } else {
+              alert(data.error || 'Authentication failed');
+            }
+          })
+          .catch(error => {
+            console.error('Error authenticating:', error);
+            connectButton.disabled = false;
+            connectButton.textContent = 'Connect to Hyperliquid';
+            alert('Failed to authenticate. Please try again.');
+          });
+      });
+      
+      // Disconnect from Hyperliquid
+      disconnectButton.addEventListener('click', function() {
+        disconnectButton.disabled = true;
+        disconnectButton.innerHTML = '<div class="spinner"></div> Disconnecting...';
+        
+        fetch('/api/disconnect', { method: 'POST' })
+          .then(response => response.json())
+          .then(data => {
+            disconnectButton.disabled = false;
+            disconnectButton.textContent = 'Disconnect';
+            
+            if (data.success) {
+              secretKeyInput.value = '';
+              accountAddressInput.value = '';
+              networkSelect.value = 'mainnet';
+              
+              authSection.classList.remove('hidden');
+              successSection.classList.add('hidden');
+            } else {
+              alert(data.error || 'Failed to disconnect');
+            }
+          })
+          .catch(error => {
+            console.error('Error disconnecting:', error);
+            disconnectButton.disabled = false;
+            disconnectButton.textContent = 'Disconnect';
+            alert('Failed to disconnect. Please try again.');
+          });
+      });
+    });
+  </script>
+</body>
+</html>
