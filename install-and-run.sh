@@ -16,6 +16,12 @@ curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/ma
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/configure-mcp.js -o configure-mcp.js
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/dashboard.html -o dashboard.html
 
+# Verify downloaded files
+echo "Verifying downloaded files..."
+echo "package.json content:"
+cat package.json
+echo ""
+
 # Make scripts executable
 chmod +x index.js
 chmod +x configure-mcp.js
