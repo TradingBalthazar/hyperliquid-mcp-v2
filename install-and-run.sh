@@ -8,19 +8,36 @@ echo "Creating directory..."
 mkdir -p hyperliquid-mcp
 cd hyperliquid-mcp
 
-# Clone the repository
+# Create package.json directly
+echo "Creating package.json..."
+cat > package.json << 'EOL'
+{
+  "name": "hyperliquid-mcp",
+  "version": "1.0.0",
+  "description": "Hyperliquid MCP Server for HL Coder",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "TradingBalthazar",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "open": "^10.1.0",
+    "python-shell": "^5.0.0"
+  }
+}
+EOL
+
+# Download other files
 echo "Downloading necessary files..."
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/index.js -o index.js
-curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/package.json -o package.json
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/hyperliquid_bridge.py -o hyperliquid_bridge.py
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/configure-mcp.js -o configure-mcp.js
 curl -s https://raw.githubusercontent.com/TradingBalthazar/hyperliquid-mcp-v2/master/dashboard.html -o dashboard.html
-
-# Verify downloaded files
-echo "Verifying downloaded files..."
-echo "package.json content:"
-cat package.json
-echo ""
 
 # Make scripts executable
 chmod +x index.js
